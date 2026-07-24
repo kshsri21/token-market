@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Monitor network egress
+        uses: bullfrogsec/bullfrog@6ad91f116342abf94e4d02c6d05260cacf717bd0
       - name: Checkout Action
         uses: actions/checkout@v7
 
