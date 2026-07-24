@@ -15,7 +15,6 @@ contract TokenMarketplace is Ownable, Pausable, ReentrancyGuard {
     uint256 private constant TOKEN_PRICE = 1 ether;
     uint256 private reseverdOrderedTokens;
     uint256 private nextOrderId;
-    
 
     mapping(uint256 => OrderInfo) private orders;
 
@@ -45,7 +44,6 @@ contract TokenMarketplace is Ownable, Pausable, ReentrancyGuard {
         _revertIfZeroTokenAmount(numberOfTokens);
         _revertIfIncorrectEthPayment(numberOfTokens);
         _revertIfTokenBalanceOfMarketplaceIsLow(numberOfTokens);
-        
 
         slvToken.safeTransfer(msg.sender, numberOfTokens);
 
