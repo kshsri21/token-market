@@ -1,0 +1,46 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+    run-slither:
+        name: slither
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Monitor network egress
+              uses: bullfrogsec/bullfrog@6ad91f116342abf94e4d02c6d05260cacf717bd0
+    
+            - name: Check out Git repository
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+            
+            - name: Install Foundry
+              uses: foundry-rs/foundry-toolchain@c7450ba673e133f5ee30098b3b54f444d3a2ca2d
+
+            - name: Build
+              run: forge build
+
+            - name: Run tests
+              run: forge test
+
+            - name: Run Slither static analysis
+              uses: crytic/slither-action@v0.4.2
+              id: slither
+              with:
+                    fail-on: high
+                    sarif: results.sarif
+                    slither-args: --filter-paths "lib|script|test"
+
+            - name: Upload Slither SARIF
+              uses: github/codeql-action/upload-sarif@v4
+              if: always()
+              continue-on-error: true
+              with:
+                 sarif_file: ${{ steps.slither.outputs.sarif }}
